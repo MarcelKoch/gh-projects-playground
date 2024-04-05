@@ -37,13 +37,13 @@ jobs:
               }
             }
           }' > query.json
-          echo 'COUNT_PENDING='$(jq '.node.reviewRequests.totalCount' query.json) >> $GITHBU_ENV
+          echo 'COUNT_PENDING='$(jq '.node.reviewRequests.totalCount' query.json) >> "$GITHBU_ENV"
           echo 'COUNT_APPROVED='$(jq '.data.repository.pullRequest.latestReviews.nodes \
                                  | map(select(.state =="APPROVED")) \
-                                 | length' query.json) >> $GITHUB_ENV
+                                 | length' query.json) >> "$GITHUB_ENV"
           echo 'COUNT_CHANGES_REQUESTED='$(jq '.data.repository.pullRequest.latestReviews.nodes \
                                  | map(select(.state =="CHANGES_REQUESTED")) \
-                                 | length' query.json) >> $GITHUB_ENV
+                                 | length' query.json) >> "$GITHUB_ENV"
 
       - name: Print results
         run: |
