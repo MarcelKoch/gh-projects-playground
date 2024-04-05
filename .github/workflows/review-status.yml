@@ -2,9 +2,9 @@ name: Update review status of a PR
 
 on:
   pull_request:
-    types: review_requested
+    types: [review_requested]
   pull_request_review:
-    types: [submitted, dissmissed]
+    types: [submitted, dismissed]
 
 concurrency:
   group: ${{ github.workflow }}-${{ (github.head_ref && github.ref) || github.run_id }}
