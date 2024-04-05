@@ -35,7 +35,8 @@ jobs:
                   }
                 }
               }
-            }' > query.json
+            }
+          }' > query.json
           echo 'COUNT_PENDING='$(jq '.node.reviewRequests.totalCount' query.json) >> $GITHBU_ENV
           echo 'COUNT_APPROVED='$(jq '.data.repository.pullRequest.latestReviews.nodes \
                                  | map(select(.state =="APPROVED")) \
