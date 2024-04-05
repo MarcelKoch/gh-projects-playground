@@ -23,18 +23,18 @@ jobs:
 
         run: |
           gh api graphql -f query='
-            query($id: String){
-              node(id:$id){
-                ... on PullRequest{
-                  reviewRequests {
-                    totalCount
-                  }
-                  latestReviews(first: 10) {
-                    nodes {
-                      state
-                    }
-                  }                
+            query ($id: ID!) {
+              node(id: $id) {
+                ... on PullRequest {
+                reviewRequests {
+                totalCount
                 }
+                latestReviews(first: 10) {
+                  nodes {
+                  state
+                  }
+                }
+              }
             }' > query.json
           echo 'COUNT_PENDING='$(jq '.node.reviewRequests.totalCount' query.json) >> $GITHBU_ENV
           echo 'COUNT_APPROVED='$(jq '.data.repository.pullRequest.latestReviews.nodes \
