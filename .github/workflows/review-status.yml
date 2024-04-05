@@ -1,0 +1,51 @@
+name: Update review status of a PR
+
+on:
+  pull_request:
+    - review_requested
+  pull_request_review:
+    - [submitted, dissmissed]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ (github.head_ref && github.ref) || github.run_id }}
+  cancel-in-progress: true
+
+
+jobs:
+  update-review-status:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get review states
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_ID: ${{ github.event.pull_request.number }}
+          PR_NODE_ID: ${{ github.event.pull_request.node_id }}
+
+        run: |
+          gh api graphql -f query='
+            query($id: String){
+              node(id:$id){
+                ... on PullRequest{
+                  reviewRequests {
+                    totalCount
+                  }
+                  latestReviews(first: 10) {
+                    nodes {
+                      state
+                    }
+                  }                
+                }
+            }' > query.json
+          echo 'COUNT_PENDING='$(jq '.node.reviewRequests.totalCount' query.json) >> $GITHBU_ENV
+          echo 'COUNT_APPROVED='$(jq '.data.repository.pullRequest.latestReviews.nodes \
+                                 | map(select(.state =="APPROVED")) \
+                                 | length' query.json) >> $GITHUB_ENV
+          echo 'COUNT_CHANGES_REQUESTED='$(jq '.data.repository.pullRequest.latestReviews.nodes \
+                                 | map(select(.state =="CHANGES_REQUESTED")) \
+                                 | length' query.json) >> $GITHUB_ENV
+
+      - name: Print results
+        run: |
+          echo "pending: $COUNT_PENDING"
+          echo "approved: $COUNT_APPROVED"
+          echo "changes-requested: $COUNT_CHANGES_REQUESTED"
