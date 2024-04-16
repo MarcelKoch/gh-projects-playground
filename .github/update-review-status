@@ -52,6 +52,8 @@ fi
 jq ".data.node.projectItems.nodes[0] | {itemId: .id, projectId: .project.id}" > projectAndItemId
 echo "done"
 
+jq "." projectAndItemId
+
 echo -n "Querying field ID of field named '$FIELD_NAME' ... "
 gh api graphql -F projectId="$(jq ".projectId" projectAndItemId)" -f query="
 query (\$projectId: ID!) {
