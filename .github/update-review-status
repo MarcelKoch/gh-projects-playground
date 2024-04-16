@@ -49,18 +49,9 @@ if [[ $(jq ".data.node.projectItems.nodes | length" response) -eq 0 ]]; then
   echo "This PR doesn't belong to any project, so no status will be updated."
   exit
 fi
-echo
-cat response
-echo
 jq ".data.node.projectItems.nodes[0] | {itemId: .id, projectId: .project.id}" response > projectAndItemId
-echo
-cat projectAndItemId
-echo
 echo "done"
 
-cat projectAndItemId
-echo
-jq "." projectAndItemId
 
 echo -n "Querying field ID of field named '$FIELD_NAME' ... "
 gh api graphql -F projectId="$(jq ".projectId" projectAndItemId)" -f query="
@@ -93,7 +84,7 @@ query($fieldId: ID!){
   }
 }' > response
 check_errors response
-jq '.data.node.options[] | {(.name): .id}' | jq -s 'reduce .[] as $m (null; . + $m)' response > values
+jq '.data.node.options[] | {(.name): .id}' response | jq -s 'reduce .[] as $m (null; . + $m)' > values
 echo "done"
 
 echo -n "Updating project review status ..."
