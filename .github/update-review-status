@@ -26,6 +26,8 @@ function check_errors {
 
 echo "Updating field: \"$FIELD_NAME\" with value: \"$FIELD_VALUE\""
 
+gh auth status
+
 echo -n "Querying project ID and item ID of the PR within the project ... "
 gh api graphql -F id="\"$PR_NODE_ID\"" -f query='
 query($id: ID!){
@@ -46,6 +48,7 @@ query($id: ID!){
 check_errors projectAndItemId
 cat projectAndItemId
 if [[ $(jq ".data.node.projectItems.nodes | length" projectAndItemId) -eq 0 ]]; then
+  echo
   echo "This PR doesn't belong to any project, so no status will be updated."
   exit
 fi
