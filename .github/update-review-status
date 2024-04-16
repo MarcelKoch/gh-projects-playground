@@ -51,7 +51,8 @@ if [[ $(jq ".data.node.projectItems.nodes | length" projectAndItemId) -eq 0 ]]; 
 fi
 echo
 cat projectAndItemId
-jq ".data.node.projectItems.nodes[0] | {itemId: .id, projectId: .project.id}" projectAndItemId > projectAndItemId
+jq ".data.node.projectItems.nodes[0] | {itemId: .id, projectId: .project.id}" projectAndItemId
+echo
 cat projectAndItemId
 echo "done"
 
