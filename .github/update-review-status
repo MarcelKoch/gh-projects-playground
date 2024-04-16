@@ -16,9 +16,9 @@ FIELD_VALUE="$2"
 function check_errors {
   local json=$1
 
-  if [[ $(jq -e ".errors" json) ]]; then
+  if [[ $(jq -e ".errors" "$json") ]]; then
     echo "The last query resulted in the following error:"
-    cat json
+    cat "$json"
     exit 1
   fi
 }
