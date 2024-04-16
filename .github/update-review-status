@@ -16,7 +16,7 @@ FIELD_VALUE="$2"
 function check_errors {
   local json=$1
 
-  if jq -e ".errors" "$json"; then
+  if jq -e ".errors" "$json" > /dev/null; then
     echo "The last query resulted in the following error:"
     cat "$json"
     exit 1
@@ -26,10 +26,8 @@ function check_errors {
 
 echo "Updating field: \"$FIELD_NAME\" with value: \"$FIELD_VALUE\""
 
-echo "$PR_NODE_ID"
-
 echo -n "Querying project ID and item ID of the PR within the project ... "
-gh api graphql -F id="$PR_NODE_ID" -f query='
+gh api graphql -F id="\"$PR_NODE_ID\"" -f query='
 query($id: ID!){
   node(id: $id) {
     ... on PullRequest {
