@@ -26,6 +26,8 @@ function check_errors {
 
 echo "Updating field: \"$FIELD_NAME\" with value: \"$FIELD_VALUE\""
 
+echo "$PR_NODE_ID"
+
 echo -n "Querying project ID and item ID of the PR within the project ... "
 gh api graphql -F id="$PR_NODE_ID" -f query='
 query($id: ID!){
