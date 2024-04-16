@@ -101,6 +101,7 @@ mutation($projectId: ID!, $itemId: ID!, $fieldId: ID!, $value: String!){
     }
   }
 }' -F projectId="$(jq ".projectId" input)" -F itemId="$(jq ".itemId" input)" \
-   -F fieldId="$(jq ".fieldId" input)" -F value="$(jq ".value" input)" > response
+   -F fieldId="$(jq ".fieldId" input)" -F value="$(jq -r ".value" input)" > response
+# somehow ONLY the value input needs to get the raw output from jq, no idea why
 check_errors response
 echo "done"
