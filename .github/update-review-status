@@ -49,7 +49,7 @@ if [[ $(jq ".data.node.projectItems.nodes | length" projectAndItemId) -eq 0 ]]; 
   echo "This PR doesn't belong to any project, so no status will be updated."
   exit
 fi
-jq ".data.node.projectItems.nodes[0] | {itemId: .id, projectId: .project.id}" > projectAndItemId
+jq ".data.node.projectItems.nodes[0] | {itemId: .id, projectId: .project.id}" projectAndItemId > projectAndItemId
 echo "done"
 
 cat projectAndItemId
