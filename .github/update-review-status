@@ -44,6 +44,7 @@ query($id: ID!){
 }
 ' > projectAndItemId
 check_errors projectAndItemId
+cat projectAndItemId
 if [[ $(jq ".data.node.projectItems.nodes | length" projectAndItemId) -eq 0 ]]; then
   echo "This PR doesn't belong to any project, so no status will be updated."
   exit
