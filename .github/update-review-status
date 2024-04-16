@@ -89,7 +89,7 @@ echo "done"
 
 echo -n "Updating project review status ..."
 gh api graphql -f query='
-mutation($projectId: ID!, $itemId: ID!, $fieldId: ID!, $value: ID!){
+mutation($projectId: ID!, $itemId: ID!, $fieldId: ID!, $value: String!){
   updateProjectV2ItemFieldValue(input: {projectId: $projectId, itemId: $itemId, fieldId: $fieldId,
                                         value: { singleSelectOptionId: $value }}){
     projectV2Item{
