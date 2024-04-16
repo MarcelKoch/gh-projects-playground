@@ -87,6 +87,8 @@ check_errors response
 jq '.data.node.options[] | {(.name): .id}' response | jq -s 'reduce .[] as $m (null; . + $m)' > values
 echo "done"
 
+jq "." values
+
 echo -n "Updating project review status ..."
 gh api graphql -f query='
 mutation($projectId: ID!, $itemId: ID!, $fieldId: ID!, $value: ID!){
