@@ -26,7 +26,7 @@ function check_errors {
 
 echo "Updating field: \"$FIELD_NAME\" with value: \"$FIELD_VALUE\""
 
-echo -n "Querying project ID and item ID of the PR within the project ... "
+echo "Querying project ID and item ID of the PR within the project ... "
 gh api graphql -F id="\"$PR_NODE_ID\"" -f query='
 query($id: ID!){
   node(id: $id) {
@@ -42,7 +42,7 @@ query($id: ID!){
     }
   }
 }
-' > projectAndItemId
+' | tee projectAndItemId
 check_errors projectAndItemId
 if [[ $(jq ".data.node.projectItems.nodes | length" projectAndItemId) -eq 0 ]]; then
   echo
