@@ -103,6 +103,6 @@ mutation($projectId: ID!, $itemId: ID!, $fieldId: ID!, $value: String!){
     }
   }
 }' -F projectId="$(jq ".projectId" input)" -F itemId="$(jq ".itemId" input)" \
-   -F fieldId="$(jq ".fieldId" input)" -F value="$(jq ".[\"$FIELD_VALUE\"]" values)" > response
+   -F fieldId="$(jq ".fieldId" input)" -F value=$(jq ".\"$FIELD_VALUE\"" values) > response
 check_errors response
 echo "done"
