@@ -57,7 +57,8 @@ jobs:
           TOKEN: ${{ secrets.TOKEN }}
         run: |
           gh auth logout
-          echo $TOKEN | gh auth login --with-token 
+          echo $TOKEN > file
+          gh auth login --with-token < file 
           if [[ $COUNT_CHANGES_REQUESTED -ge 1 ]]; then
             .github/update-review-status "testing" "in-progress"
             exit
