@@ -88,7 +88,7 @@ jq '.data.node.options[] | {(.name): .id}' response | jq -s 'reduce .[] as $m (n
 echo "done"
 
 echo "Combined inputs for mutation call:"
-jq -s ".[0] + {value: .[1].\"$FIELD_VALUE\"" inputIds values > input
+jq -s ".[0] + {value: .[1].\"$FIELD_VALUE\"}" inputIds values > input
 jq "." input
 
 echo -n "Updating project review status ..."
