@@ -57,13 +57,13 @@ jobs:
         run: |
           if [[ $COUNT_CHANGES_REQUESTED -ge 1 ]]; then
             .github/update-review-status "testing" "in-progress"
-            exit $?
+            exit
           fi
           if [[ $COUNT_APPROVED -ge 1 ]]; then
             .github/update-review-status "testing" "ready-to-merge"
-            exit $?
+            exit
           fi
           if [[ $COUNT_PENDING -ge 1 ]]; then
             .github/update-review-status "testing" "in-review"
-            exit $?
+            exit
           fi
