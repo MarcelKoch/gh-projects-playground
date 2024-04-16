@@ -52,6 +52,7 @@ fi
 jq ".data.node.projectItems.nodes[0] | {itemId: .id, projectId: .project.id}" > projectAndItemId
 echo "done"
 
+cat projectAndItemId
 jq "." projectAndItemId
 
 echo -n "Querying field ID of field named '$FIELD_NAME' ... "
