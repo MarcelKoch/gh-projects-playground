@@ -47,3 +47,18 @@ jobs:
           echo "pending: $COUNT_PENDING"
           echo "approved: $COUNT_APPROVED"
           echo "changes-requested: $COUNT_CHANGES_REQUESTED"
+      
+      - name: Update status
+        run: |
+          if [[ $COUNT_CHANGES_REQUESTED -ge 1 ]]; then
+            .github/update-review-status "testing" "in-progress"
+            exit $?
+          fi
+          if [[ $COUNT_APPROVED -ge 1 ]]; then
+            .github/update-review-status "testing" "ready-to-merge"
+            exit $?
+          fi
+          if [[ $COUNT_PENDING -ge 1 ]]; then
+            .github/update-review-status "testing" "in-review"
+            exit $?
+          fi
