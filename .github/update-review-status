@@ -42,21 +42,24 @@ query($id: ID!){
     }
   }
 }
-' | tee projectAndItemId
-check_errors projectAndItemId
-if [[ $(jq ".data.node.projectItems.nodes | length" projectAndItemId) -eq 0 ]]; then
+' | tee response
+check_errors response
+if [[ $(jq ".data.node.projectItems.nodes | length" response) -eq 0 ]]; then
   echo
   echo "This PR doesn't belong to any project, so no status will be updated."
   exit
 fi
 echo
-cat projectAndItemId
-jq ".data.node.projectItems.nodes[0] | {itemId: .id, projectId: .project.id}" projectAndItemId
+cat response
+echo
+jq ".data.node.projectItems.nodes[0] | {itemId: .id, projectId: .project.id}" response > projectAndItemId
 echo
 cat projectAndItemId
+echo
 echo "done"
 
 cat projectAndItemId
+echo
 jq "." projectAndItemId
 
 echo -n "Querying field ID of field named '$FIELD_NAME' ... "
@@ -72,9 +75,9 @@ query (\$projectId: ID!) {
     }
   }
 }
-" > fieldId
-check_errors fieldId
-jq -s "{fieldId: .[0].data.node.field.id} + .[1] " fieldId projectAndItemId > input
+" > response
+check_errors response
+jq -s "{fieldId: .[0].data.node.field.id} + .[1] " response projectAndItemId > input
 echo "done"
 
 echo -n "Querying the IDs of the values of field '$FIELD_NAME' ... "
@@ -88,9 +91,9 @@ query($fieldId: ID!){
      }
    }
   }
-}' > values
-check_errors values
-jq '.data.node.options[] | {(.name): .id}' | jq -s 'reduce .[] as $m (null; . + $m)' values > values
+}' > response
+check_errors response
+jq '.data.node.options[] | {(.name): .id}' | jq -s 'reduce .[] as $m (null; . + $m)' response > values
 echo "done"
 
 echo -n "Updating project review status ..."
