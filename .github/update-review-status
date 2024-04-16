@@ -43,14 +43,18 @@ query($id: ID!){
   }
 }
 ' | tee projectAndItemId
+echo "1"
 check_errors projectAndItemId
 if [[ $(jq ".data.node.projectItems.nodes | length" projectAndItemId) -eq 0 ]]; then
   echo
   echo "This PR doesn't belong to any project, so no status will be updated."
   exit
 fi
+echo "2"
 jq ".data.node.projectItems.nodes[0] | {itemId: .id, projectId: .project.id}" projectAndItemId > projectAndItemId
 echo "done"
+
+echo "3"
 
 cat projectAndItemId
 jq "." projectAndItemId
