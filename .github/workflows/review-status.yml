@@ -52,7 +52,6 @@ jobs:
       
       - name: Update status
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PR_NODE_ID: ${{ github.event.pull_request.node_id }}
           TOKEN: ${{ secrets.TOKEN }}
         run: |
