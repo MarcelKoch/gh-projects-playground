@@ -56,7 +56,6 @@ jobs:
           PR_NODE_ID: ${{ github.event.pull_request.node_id }}
           TOKEN: ${{ secrets.TOKEN }}
         run: |
-          gh auth logout
           echo $TOKEN > file
           gh auth login --with-token < file 
           if [[ $COUNT_CHANGES_REQUESTED -ge 1 ]]; then
