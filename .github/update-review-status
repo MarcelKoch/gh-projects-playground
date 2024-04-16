@@ -44,7 +44,7 @@ query($id: ID!){
 }
 ' > projectItemId
 check_errors projectItemId
-if [[ $(jq ".data.repository.PullRequest.projectItems.nodes | length") -eq 0 ]]; then
+if [[ $(jq ".data.node.projectItems.nodes | length") -eq 0 ]]; then
   echo "This PR doesn't belong to any project, so no status will be updated."
   exit
 fi
