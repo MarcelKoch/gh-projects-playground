@@ -68,11 +68,11 @@ query (\$projectId: ID!) {
 }
 " > response
 check_errors response
-jq -s "{fieldId: .[0].data.node.field.id} + .[1] " response projectAndItemId > input
+jq -s "{fieldId: .[0].data.node.field.id} + .[1] " response projectAndItemId > inputIds
 echo "done"
 
 echo -n "Querying the IDs of the values of field '$FIELD_NAME' ... "
-gh api graphql -F fieldId="$(jq ".fieldId" input)" -f query='
+gh api graphql -F fieldId="$(jq ".fieldId" inputIds)" -f query='
 query($fieldId: ID!){
   node(id: $fieldId){
    ... on ProjectV2SingleSelectField{
@@ -87,11 +87,9 @@ check_errors response
 jq '.data.node.options[] | {(.name): .id}' response | jq -s 'reduce .[] as $m (null; . + $m)' > values
 echo "done"
 
-echo "Input IDs for mutation call:"
+echo "Combined inputs for mutation call:"
+jq -s ".[0] + {value: .[1].\"$FIELD_VALUE\"" inputIds values > input
 jq "." input
-
-echo "Input field value id for mutation call:"
-jq ".\"$FIELD_VALUE\"" values
 
 echo -n "Updating project review status ..."
 gh api graphql -f query='
@@ -103,6 +101,6 @@ mutation($projectId: ID!, $itemId: ID!, $fieldId: ID!, $value: String!){
     }
   }
 }' -F projectId="$(jq ".projectId" input)" -F itemId="$(jq ".itemId" input)" \
-   -F fieldId="$(jq ".fieldId" input)" -F value=$(jq ".\"$FIELD_VALUE\"" values) > response
+   -F fieldId="$(jq ".fieldId" input)" -F value="$(jq ".value" input)" > response
 check_errors response
 echo "done"
