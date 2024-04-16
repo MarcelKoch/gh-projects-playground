@@ -54,7 +54,10 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PR_NODE_ID: ${{ github.event.pull_request.node_id }}
+          TOKEN: ${{ secrets.TOKEN }}
         run: |
+          gh auth logout
+          echo $TOKEN | gh auth login --with-token 
           if [[ $COUNT_CHANGES_REQUESTED -ge 1 ]]; then
             .github/update-review-status "testing" "in-progress"
             exit
