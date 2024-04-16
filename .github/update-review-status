@@ -42,7 +42,7 @@ query($id: ID!){
     }
   }
 }
-' | tee response
+' > response
 check_errors response
 if [[ $(jq ".data.node.projectItems.nodes | length" response) -eq 0 ]]; then
   echo
@@ -86,6 +86,12 @@ query($fieldId: ID!){
 check_errors response
 jq '.data.node.options[] | {(.name): .id}' response | jq -s 'reduce .[] as $m (null; . + $m)' > values
 echo "done"
+
+echo "Input IDs for mutation call:"
+jq "." input
+
+echo "Input field value id for mutation call:"
+jq ".\"$FIELD_VALUE\"" values
 
 echo -n "Updating project review status ..."
 gh api graphql -f query='
