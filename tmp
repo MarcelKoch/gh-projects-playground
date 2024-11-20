@@ -1,0 +1,2 @@
+{"errors":[{"path":["query","node","... on pullRequest"],"extensions":{"code":"undefinedType","typeName":"pullRequest"},"locations":[{"line":4,"column":5}],"message":"No such type pullRequest, so it can't be a fragment condition"}]}
+something?
